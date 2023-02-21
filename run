@@ -1,4 +1,6 @@
 #!/bin/bash
+# This software is ...
+# Copyright (c) 2022 Joseph Turner (aka Tearran) & contributors
 
 main="$(dirname "${BASH_SOURCE[0]}")"
 dir=/run/user/1000/its/
