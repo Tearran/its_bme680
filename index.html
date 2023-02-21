@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JSON Data Display</title>
+	<style>
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		th, td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+	</style>
+</head>
+<body>
+	<h1>JSON Data Display</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Temperature</th>
+				<th>Pressure</th>
+				<th>Humidity</th>
+				<th>Gas Resistance</th>
+				<th>Heat Stable</th>
+				<th>Gas Index</th>
+			</tr>
+		</thead>
+		<tbody id="data">
+		</tbody>
+	</table>
+
+	<script>
+		// Function to fetch and update data from server every 1 second
+		function updateData() {
+			fetch('http://anux:8000/bmp680.json')
+				.then(response => response.json())
+				.then(data => {
+					const table = document.getElementById('data');
+					table.innerHTML = ''; // clear the previous data from the table
+
+					const tr = document.createElement('tr');
+					const temperatureTd = document.createElement('td');
+					const pressureTd = document.createElement('td');
+					const humidityTd = document.createElement('td');
+					const gasResistanceTd = document.createElement('td');
+					const heatStableTd = document.createElement('td');
+					const gasIndexTd = document.createElement('td');
+
+					temperatureTd.textContent = data.temperature;
+					pressureTd.textContent = data.pressure;
+					humidityTd.textContent = data.humidity;
+					gasResistanceTd.textContent = data.gas_resistance;
+					heatStableTd.textContent = data.heat_stable ? 'Yes' : 'No';
+					gasIndexTd.textContent = data.gas_index;
+
+					tr.appendChild(temperatureTd);
+					tr.appendChild(pressureTd);
+					tr.appendChild(humidityTd);
+					tr.appendChild(gasResistanceTd);
+					tr.appendChild(heatStableTd);
+					tr.appendChild(gasIndexTd);
+					table.appendChild(tr);
+				})
+				.catch(error => console.log(error));
+		}
+
+		// Call the updateData function every 1 second
+		setInterval(updateData, 1000);
+	</script>
+</body>
+</html>
