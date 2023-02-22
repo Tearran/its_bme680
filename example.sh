@@ -12,10 +12,10 @@ if [ ! -d "$dir" ]; then
   mkdir -p "$dir"
 fi
 #  open host to network not recomended beond develoment
-#myip="http://$(hostname -I | sed 's/^[ \t]*//;s/[ \t]*$//'):8000/bmp680.json"
+myip="http://$(hostname -I | sed 's/^[ \t]*//;s/[ \t]*$//'):8000"
 
 # Bind to localhost
-myip="http://localhost:8000/bmp680.json"
+#myip="http://localhost:8000/bme680.json"
 cat <<EOF > /run/user/1000/its/index.html
 <!DOCTYPE html>
 <html>
@@ -44,7 +44,7 @@ cat <<EOF > /run/user/1000/its/index.html
       
    text {
 	   opacity: 1;
-	   font-size: xx-large;
+	   font-size: large;
        fill: #ffff00;
        stoke:rgba(255,130,0,0);
    }
@@ -59,55 +59,74 @@ cat <<EOF > /run/user/1000/its/index.html
 			   <desc id="desc4974">Banner and main body</desc>
 			   <title id="title4976">Frame with date banner</title>
 		   </path>
-		   <text id="title01" class="dataTitle" x="950" y="140" font-size="2em">BMP680</text>
+		   <text id="title01" class="dataTitle" x="950" y="140" font-size="2em">BMPE680</text>
 	   </g>
 <g transform="translate(50 25)">
-
+    
   <text x="5%" y="5%">Temperature </text>
   <text x="20%" y="5%">Pressure   </text>
   <text x="35%" y="5%">Humidity   </text>
   <text x="50%" y="5%">Gas Resist </text>
   <text x="75%" y="5%">Stable</text>
   <text x="85%" y="5%">Index  </text>
-  <g id="data" x="5%" y="15%">array</g>
+  
+  <g id="bme680" x="5%" y="15%">array</g>
+  <g id="bmp280" x="5%" y="20%">array</g>
+  
 </g>
 </svg>
-  <script>
-    function updateData() {
-      fetch('http://192.168.0.11:8000/bmp680.json')
-        .then(response => response.json())
-        .then(data => {
-          const g = document.getElementById('data');
-          g.innerHTML = '';
-          const y = 25;
-          g.appendChild(createText(data.temperature, 5, y));
-          g.appendChild(createText(data.pressure, 20, y));
-          g.appendChild(createText(data.humidity, 35, y));
-          g.appendChild(createText(data.gas_resistance, 50, y));
-          g.appendChild(createText(data.heat_stable ? 'Yes' : 'No', 75, y));
-          g.appendChild(createText(data.gas_index, 85, y));
-        })
-        .catch(error => console.log(error));
-    }
+<script>
+  function updateData() {
+    // Fetch data from first endpoint
+    fetch('$myip/bme680.json')
+      .then(response => response.json())
+      .then(data => {
+        const g1 = document.getElementById('bme680');
+        g1.innerHTML = '';
+        const y1 = 15;
+        g1.appendChild(createText(data.temperature, 5, y1));
+        g1.appendChild(createText(data.pressure, 20, y1));
+        g1.appendChild(createText(data.humidity, 35, y1));
+        g1.appendChild(createText(data.gas_resistance, 50, y1));
+        g1.appendChild(createText(data.heat_stable ? 'Yes' : 'No', 75, y1));
+        g1.appendChild(createText(data.gas_index, 85, y1));
+      })
+      .catch(error => console.log(error));
+    
+    // Fetch data from second endpoint
+    fetch('$myip/bme680.json')
+      .then(response => response.json())
+      .then(data => {
+        const g2 = document.getElementById('bmp280');
+        g2.innerHTML = '';
+        const y2 = 25;
+        g2.appendChild(createText(data.temperature, 5, y2));
+        g2.appendChild(createText(data.pressure, 20, y2));
+      })
+      .catch(error => console.log(error));
+  }
 
-    function createText(text, x, y) {
-      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      t.textContent = text;
-      t.setAttribute('x', x + '%');
-      t.setAttribute('y', y + '%');
-      return t;
-    }
+  function createText(text, x, y) {
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.textContent = text;
+    t.setAttribute('x', x + '%');
+    t.setAttribute('y', y + '%');
+    return t;
+  }
 
-    setInterval(updateData, 1000);
-  </script>
+  setInterval(updateData, 1000);
+</script>
+
+
+
 </body>
 
 </html>
 
 EOF
 
-    python3 "$main/bmp680.py" &
-    echo "$main/bmp680.py running"
+    python3 "$main/its_bme680.py" &
+    echo "$main/its_bme680.py running"
     cd "$dir" 
     python3 -m http.server 8000
     
