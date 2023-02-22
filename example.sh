@@ -11,7 +11,11 @@ cd "$main"
 if [ ! -d "$dir" ]; then
   mkdir -p "$dir"
 fi
-myip="http://$(hostname -I | sed 's/^[ \t]*//;s/[ \t]*$//'):8000/bmp680.json"
+#  open host to network not recomended beond develoment
+#myip="http://$(hostname -I | sed 's/^[ \t]*//;s/[ \t]*$//'):8000/bmp680.json"
+
+# Bind to localhost
+myip="http://localhost:8000/bmp680.json"
 cat <<EOF > /run/user/1000/its/index.html
 <!DOCTYPE html>
 <html>
