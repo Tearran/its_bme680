@@ -1,28 +1,42 @@
-# BME680 Sensor Data Logger
+# BME680 Sensor json
 
-This software logs sensor data from a BME680 sensor and saves it to a JSON file.
+`bme680.py` Samples sensor data from a BME680
+Writes to the ram as a JSON file.
+THe json is updated/overwritten every X seconds  
+
+# Perpose 
+To later be used by Front ends and or lager databases.
+
 
 ## Requirements
 
-- Python 3
+- Python3 pip3
 - bme680 library (install with `python3 -m pip install bme680`)
+```bash
+python3 -m pip install bme680
+```
 
 ## Usage
 
 1. Connect the BME680 sensor to your device.
-2. Run the `bme680_logger.py` script using Python 3.
+2. Clone and cd into it repo
+`
+git clone https://github.com/Tearran/its_bmp680.git && cd its_bmp680
+`
+2. cd into the repo Run the `bme680.py` script as a background prosses `python3 bme680.py&`
 3. The sensor data will be logged to a JSON file (`/run/user/1000/its/bmp680.json`) every second.
 
+# or use 
 
-run is an example of a Bash script that sets up a local server to display sensor data from a BME680 sensor.
+## The included example 
+bash script sets up develoment eviroment, 
+1. starts bme680.py 
+2. starts a local server to host the said json, 
+3. genirates a index.html in the ram 
+4. Html displays the data in a readalbel format via js
+5. navigate to http://localhost:8000/bmp680.json 
 
-
-```bash
-cat /run/user/1000/its/bmp680.json
-```
-http://localhost:8000 
-
-This will show the most recent JSON object in the `bmp680.json` file in a formatted way.
+This will show the most recent JSON object in the `bmp680.json`.
 
 ## Contributing
 
