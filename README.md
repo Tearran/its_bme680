@@ -34,7 +34,7 @@ bash script sets up develoment eviroment,
 2. starts a local server to host the said json, 
 3. genirates a index.html in the ram 
 4. Html displays the data in a readalbel format via js
-5. navigate to http://localhost:8000/bmp680.json 
+5. navigate to http://localhost:8000/bme680.json 
 
 This will show the most recent JSON object in the `bmp680.json`.
 
